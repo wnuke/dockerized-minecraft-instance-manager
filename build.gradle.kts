@@ -23,6 +23,10 @@ repositories {
     maven("https://kotlin.bintray.com/kotlinx")
 }
 
+val run by tasks.getting(JavaExec::class) {
+    standardInput = System.`in`
+}
+
 dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom"))

@@ -5,7 +5,7 @@ import com.github.dockerjava.api.command.BuildImageResultCallback
 import com.github.dockerjava.api.model.BuildResponseItem
 import java.io.Closeable
 
-class DockerBuildCallback: ResultCallbackTemplate<BuildImageResultCallback, BuildResponseItem>() {
+class DockerBuildCallback : ResultCallbackTemplate<BuildImageResultCallback, BuildResponseItem>() {
     override fun onComplete() {
         println("Build finished.")
         close()
