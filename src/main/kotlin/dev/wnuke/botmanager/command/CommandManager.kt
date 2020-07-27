@@ -8,7 +8,7 @@ import java.util.regex.Pattern
 
 
 class CommandManager {
-    private val commands: HashSet<Command> = hashSetOf(Build(), Create(), Destroy(), DestroyAll(), Exit(), List(), Prune())
+    private val commands = hashSetOf(Build(), Connect(), Create(), Destroy(), DestroyAll(), Exit(), List(), Prune())
 
     fun execute(commandWithArgs: String) {
         if (commandWithArgs.isEmpty() || commandWithArgs.isBlank()) return

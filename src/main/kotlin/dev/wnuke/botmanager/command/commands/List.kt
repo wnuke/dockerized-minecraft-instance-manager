@@ -11,7 +11,7 @@ class List : Command() {
         println("There are ${botInstances.size} instance${if (botInstances.size != 1) "s" else ""}${if (botInstances.size != 0) ":" else "."}")
         for (instance in botInstances) {
             val port: String = if (instance.ports.isNotEmpty()) instance.ports[0].publicPort.toString() else "no ports"
-            println("name: ${instance.names.getOrElse(0) { "unnamed" }}, id: ${instance.id.substring(0..11)}, port: $port, state: ${instance.state}")
+            println("name: ${instance.names.getOrElse(0) { "unnamed" }}, id: ${instance.id.substring(0..11)}, number: $port, state: ${instance.state}")
         }
     }
 }

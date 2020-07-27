@@ -10,6 +10,7 @@ import com.github.dockerjava.core.DockerClientConfig
 import com.github.dockerjava.core.DockerClientImpl
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
+import dev.wnuke.botmanager.dockerAPI
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -36,6 +37,20 @@ class DockerAPI {
             println("Cannot connect to Docker daemon, please verify it is running, exiting")
             exitProcess(1)
         }
+    }
+
+    fun getInstanceByPort(instancePort: Int): Container? {
+        for (instance in getBotInstances()) {
+            if ((instance.ports.getOrNull(0) ?: continue).publicPort == instancePort) return instance
+        }
+        return null
+    }
+
+    fun instanceExists(instancePort: Int): Boolean {
+        for (instance in getBotInstances()) {
+            if ((instance.ports.getOrNull(0) ?: continue).publicPort == instancePort) return true
+        }
+        return false
     }
 
     fun buildBotImage(path: String): Boolean {
