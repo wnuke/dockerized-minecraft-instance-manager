@@ -3,7 +3,7 @@ package dev.wnuke.botmanager.command
 import dev.wnuke.botmanager.command.arguments.Argument
 
 abstract class Command {
-    abstract val arguments: Array<Argument<out Any>>
+    open val arguments: Array<Argument<out Any>> = emptyArray()
     abstract val aliases: Array<String>
 
     fun exec(args: Array<String>) {

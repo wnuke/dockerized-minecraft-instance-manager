@@ -58,7 +58,7 @@ class DockerAPI {
 
     fun getBotInstances(): HashSet<Container> {
         try {
-            val allContainers = dockerClient.listContainersCmd().exec()
+            val allContainers = dockerClient.listContainersCmd().withShowAll(true).exec()
             val botContainers: HashSet<Container> = HashSet()
             for (container in allContainers) {
                 if (container.image == "dockermcbot:managed") {
@@ -69,6 +69,30 @@ class DockerAPI {
         } catch (_: Exception) {
         }
         return HashSet()
+    }
+
+    fun destroyAllBotInstances(): Boolean {
+        return try {
+            for (instance in getBotInstances()) {
+                dockerClient.removeContainerCmd(instance.id).withForce(true).exec()
+            }
+            true
+        } catch (_: Exception) {
+            false
+        }
+    }
+
+    fun pruneBotInstances(): Boolean {
+        return try {
+            for (instance in getBotInstances()) {
+                if (instance.state != "running") {
+                    dockerClient.removeContainerCmd(instance.id).withForce(true).exec()
+                }
+            }
+            true
+        } catch (_: Exception) {
+            false
+        }
     }
 
     fun destroyBotInstance(port: Int): Boolean {
