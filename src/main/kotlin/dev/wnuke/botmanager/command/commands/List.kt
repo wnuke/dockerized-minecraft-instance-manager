@@ -6,7 +6,7 @@ import dev.wnuke.botmanager.dockerAPI
 
 class List : Command() {
     override val arguments: Array<Argument<out Any>> = emptyArray()
-    override val aliases: Array<String> = arrayOf("list", "instances")
+    override val aliases: Array<String> = arrayOf("list", "instances", "ls", "l")
 
     override fun run() {
         val botInstances = dockerAPI.getBotInstances()

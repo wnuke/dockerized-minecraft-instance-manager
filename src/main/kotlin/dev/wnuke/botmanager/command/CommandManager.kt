@@ -2,6 +2,7 @@ package dev.wnuke.botmanager.command
 
 import dev.wnuke.botmanager.command.commands.Build
 import dev.wnuke.botmanager.command.commands.Create
+import dev.wnuke.botmanager.command.commands.Destroy
 import dev.wnuke.botmanager.command.commands.List
 import java.util.*
 import java.util.regex.Matcher
@@ -9,7 +10,7 @@ import java.util.regex.Pattern
 
 
 class CommandManager {
-    private val commands: HashSet<Command> = hashSetOf(Build(), Create(), List())
+    private val commands: HashSet<Command> = hashSetOf(Build(), Create(), List(), Destroy())
 
     fun execute(commandWithArgs: String) {
         if (commandWithArgs.isEmpty() || commandWithArgs.isBlank()) return

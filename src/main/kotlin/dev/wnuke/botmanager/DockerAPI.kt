@@ -39,63 +39,90 @@ class DockerAPI {
         }
     }
 
-    fun buildBotImage(path: String) {
-        val botBuildFolder = File(path)
-        if (File(botBuildFolder.absolutePath + "/Dockerfile").exists()) {
-            dockerClient.buildImageCmd(botBuildFolder)
-                    .withTags(setOf("dockermcbot:managed"))
-                    .exec(DockerBuildCallback())
-                    .awaitCompletion()
-        } else {
-            println("${botBuildFolder.absolutePath} does not contain a Dockerfile, it is probably not the bot build folder.")
+    fun buildBotImage(path: String): Boolean {
+        try {
+            val botBuildFolder = File(path)
+            if (File(botBuildFolder.absolutePath + "/Dockerfile").exists()) {
+                val imageID = dockerClient.buildImageCmd(botBuildFolder)
+                        .withTags(setOf("dockermcbot:managed"))
+                        .exec(DockerBuildCallback())
+                        .awaitCompletion().awaitImageId()
+                if (dockerClient.searchImagesCmd(imageID).exec().isNotEmpty()) {
+                    return true
+                }
+            }
+        } catch (_: Exception) {
         }
+        return false
     }
 
     fun getBotInstances(): HashSet<Container> {
-        val allContainers = dockerClient.listContainersCmd().exec()
-        val botContainers: HashSet<Container> = HashSet()
-        for (container in allContainers) {
-            if (container.image == "dockermcbot:managed") {
-                botContainers.add(container)
-            }
-        }
-        return botContainers
-    }
-
-    fun createBotInstance(username: String, password: String) {
-        val namePrefix = "dockermcbotinst-"
-        println("Creating new instance.")
-        val ports: HashSet<Int> = HashSet()
-        val names: HashSet<String> = HashSet()
-        var port = 10000
-        for (container in dockerClient.listContainersCmd().withShowAll(true).exec()) {
-            for (portMap in container.ports) {
-                if (portMap != null && portMap.publicPort != null) {
-                    ports.add(portMap.publicPort!!)
+        try {
+            val allContainers = dockerClient.listContainersCmd().exec()
+            val botContainers: HashSet<Container> = HashSet()
+            for (container in allContainers) {
+                if (container.image == "dockermcbot:managed") {
+                    botContainers.add(container)
                 }
             }
-            for (name in container.names) {
-                names.add(name)
+            return botContainers
+        } catch (_: Exception) {
+        }
+        return HashSet()
+    }
+
+    fun destroyBotInstance(port: Int): Boolean {
+        try {
+            for (container in dockerClient.listContainersCmd().withShowAll(true).exec()) {
+                for (portMap in container.ports) {
+                    if (portMap != null && portMap.publicPort != null) {
+                        if (portMap.publicPort == port) {
+                            dockerClient.removeContainerCmd(container.id).withForce(true).exec()
+                            return true
+                        }
+                    }
+                }
             }
+        } catch (_: Exception) {
         }
-        while (ports.contains(port) || names.contains("/$namePrefix$port")) {
-            port++
+        return false
+    }
+
+    fun createBotInstance(username: String, password: String): Boolean {
+        try {
+            val namePrefix = "dockermcbotinst-"
+            val ports: HashSet<Int> = HashSet()
+            val names: HashSet<String> = HashSet()
+            var port = 10000
+            for (container in dockerClient.listContainersCmd().withShowAll(true).exec()) {
+                for (portMap in container.ports) {
+                    if (portMap != null && portMap.publicPort != null) {
+                        ports.add(portMap.publicPort!!)
+                    }
+                }
+                for (name in container.names) {
+                    names.add(name)
+                }
+            }
+            while (ports.contains(port) || names.contains("/$namePrefix$port")) {
+                port++
+            }
+            val tcp8000 = ExposedPort.tcp(8000)
+            val portBindings = Ports()
+            portBindings.bind(tcp8000, Ports.Binding.bindPort(port))
+            if (dockerClient.listImagesCmd().withShowAll(true).withImageNameFilter("dockermcbot:managed").exec().isNotEmpty()) {
+                val instanceID = dockerClient.createContainerCmd("dockermcbot:managed")
+                        .withEnv("USERNAME=$username").withEnv("PASSWORD=$password")
+                        .withExposedPorts(tcp8000)
+                        .withName("$namePrefix$port")
+                        .withHostConfig(HostConfig().withPortBindings(portBindings))
+                        .exec().id
+                dockerClient.startContainerCmd(instanceID).exec()
+                return true
+            }
+        } catch (_: Exception) {
         }
-        val tcp8000 = ExposedPort.tcp(8000)
-        val portBindings = Ports()
-        portBindings.bind(tcp8000, Ports.Binding.bindPort(port))
-        if (dockerClient.listImagesCmd().withShowAll(true).withImageNameFilter("dockermcbot:managed").exec().isNotEmpty()) {
-            val instanceID = dockerClient.createContainerCmd("dockermcbot:managed")
-                    .withEnv("USERNAME=$username").withEnv("PASSWORD=$password")
-                    .withExposedPorts(tcp8000)
-                    .withName("$namePrefix$port")
-                    .withHostConfig(HostConfig().withPortBindings(portBindings))
-                    .exec().id
-            dockerClient.startContainerCmd(instanceID).exec()
-            println("Instance created with port $port.")
-        } else {
-            println("Bot image is not built, please run \"build <path>\" first.")
-        }
+        return false
     }
 }
 
