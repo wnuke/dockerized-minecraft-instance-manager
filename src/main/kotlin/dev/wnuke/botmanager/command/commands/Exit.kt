@@ -4,7 +4,7 @@ import dev.wnuke.botmanager.command.Command
 import dev.wnuke.botmanager.dockerAPI
 import kotlin.system.exitProcess
 
-class Exit: Command() {
+class Exit : Command() {
     override val aliases: Array<String> = arrayOf("exit", "q", "e")
 
     override fun run() {

@@ -3,7 +3,7 @@ package dev.wnuke.botmanager.command.commands
 import dev.wnuke.botmanager.command.Command
 import dev.wnuke.botmanager.dockerAPI
 
-class Prune: Command() {
+class Prune : Command() {
     override val aliases: Array<String> = arrayOf("prune")
 
     override fun run() {

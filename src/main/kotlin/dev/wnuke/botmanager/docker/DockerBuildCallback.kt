@@ -1,4 +1,4 @@
-package dev.wnuke.botmanager
+package dev.wnuke.botmanager.docker
 
 import com.github.dockerjava.api.async.ResultCallbackTemplate
 import com.github.dockerjava.api.command.BuildImageResultCallback

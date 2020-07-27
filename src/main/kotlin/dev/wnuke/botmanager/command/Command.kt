@@ -14,7 +14,7 @@ abstract class Command {
                 if (args.size <= i && arg.required) {
                     println("Missing non-optional argument ${arg.name}: ${arg.description}")
                     return
-                }  else if (args.size <= i) {
+                } else if (args.size <= i) {
                     break
                 } else {
                     try {
