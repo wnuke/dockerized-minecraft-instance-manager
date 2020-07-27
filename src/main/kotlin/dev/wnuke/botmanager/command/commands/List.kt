@@ -12,7 +12,8 @@ class List : Command() {
         val botInstances = dockerAPI.getBotInstances()
         println("There are ${botInstances.size} instance${if (botInstances.size != 1) "s" else ""}${if (botInstances.size != 0) ":" else "."}")
         for (instance in botInstances) {
-            println("${instance.names.getOrElse(0) { "unnamed" }}: ${instance.id}, ${instance.ports.getOrElse(0) { "no ports" }}")
+            val port: String = if (instance.ports.isNotEmpty()) instance.ports[0].publicPort.toString() else "no ports"
+            println("name: ${instance.names.getOrElse(0) { "unnamed" }}, id: ${instance.id.substring(0..11)}, port: $port")
         }
     }
 }

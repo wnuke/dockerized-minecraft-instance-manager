@@ -1,19 +1,21 @@
 package dev.wnuke.botmanager
 
 import com.github.dockerjava.api.DockerClient
-import com.github.dockerjava.api.model.*
+import com.github.dockerjava.api.model.Container
+import com.github.dockerjava.api.model.ExposedPort
+import com.github.dockerjava.api.model.HostConfig
+import com.github.dockerjava.api.model.PortBinding
+import com.github.dockerjava.api.model.Ports
 import com.github.dockerjava.core.DefaultDockerClientConfig
 import com.github.dockerjava.core.DockerClientConfig
 import com.github.dockerjava.core.DockerClientImpl
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
 import java.io.File
-import java.io.IOException
-import java.lang.RuntimeException
 import kotlin.system.exitProcess
 
 
-public class DockerAPI {
+class DockerAPI {
     private val dockerClientConfig: DockerClientConfig
 
     private val httpClient: DockerHttpClient
@@ -61,6 +63,7 @@ public class DockerAPI {
     }
 
     fun createBotInstance(username: String, password: String) {
+        val namePrefix = "dockermcbotinst-"
         println("Creating new instance.")
         val ports: HashSet<Int> = HashSet()
         val names: HashSet<String> = HashSet()
@@ -75,13 +78,18 @@ public class DockerAPI {
                 names.add(name)
             }
         }
-        while (ports.contains(port)) {
+        while (ports.contains(port) || names.contains("/$namePrefix$port")) {
             port++
         }
+        val tcp8000 = ExposedPort.tcp(8000)
+        val portBindings = Ports()
+        portBindings.bind(tcp8000, Ports.Binding.bindPort(port))
         if (dockerClient.listImagesCmd().withShowAll(true).withImageNameFilter("dockermcbot:managed").exec().isNotEmpty()) {
             val instanceID = dockerClient.createContainerCmd("dockermcbot:managed")
                     .withEnv("USERNAME=$username").withEnv("PASSWORD=$password")
-                    .withPortBindings(PortBinding(Ports.Binding("", "$port"),ExposedPort(8000)))
+                    .withExposedPorts(tcp8000)
+                    .withName("$namePrefix$port")
+                    .withHostConfig(HostConfig().withPortBindings(portBindings))
                     .exec().id
             dockerClient.startContainerCmd(instanceID).exec()
             println("Instance created with port $port.")
