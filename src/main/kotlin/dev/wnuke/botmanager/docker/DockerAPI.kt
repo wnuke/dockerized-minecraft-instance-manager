@@ -53,7 +53,7 @@ class DockerAPI {
         return false
     }
 
-    fun buildBotImage(path: String): Boolean {
+    fun buildBotImage(path: String) {
         try {
             val botBuildFolder = File(path)
             if (File(botBuildFolder.absolutePath + "/Dockerfile").exists()) {
@@ -61,13 +61,9 @@ class DockerAPI {
                         .withTags(setOf("dockermcbot:managed"))
                         .exec(DockerBuildCallback())
                         .awaitCompletion().awaitImageId()
-                if (dockerClient.searchImagesCmd(imageID).exec().isNotEmpty()) {
-                    return true
-                }
             }
         } catch (_: Exception) {
         }
-        return false
     }
 
     fun getBotInstances(): HashSet<Container> {

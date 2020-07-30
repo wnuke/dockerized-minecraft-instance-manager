@@ -10,10 +10,6 @@ class Build : Command() {
     override val aliases: Array<String> = arrayOf("build", "b")
 
     override fun run() {
-        if (dockerAPI.buildBotImage(arguments[0].value as String)) {
-            println("Successfully built the bot image.")
-        } else {
-            println("Image build failed, please check that you specified the correct build folder.")
-        }
+        dockerAPI.buildBotImage(arguments[0].value as String)
     }
 }
