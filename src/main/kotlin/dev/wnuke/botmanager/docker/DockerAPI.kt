@@ -57,10 +57,10 @@ class DockerAPI {
         try {
             val botBuildFolder = File(path)
             if (File(botBuildFolder.absolutePath + "/Dockerfile").exists()) {
-                val imageID = dockerClient.buildImageCmd(botBuildFolder)
+                dockerClient.buildImageCmd(botBuildFolder)
                         .withTags(setOf("dockermcbot:managed"))
                         .exec(DockerBuildCallback())
-                        .awaitCompletion().awaitImageId()
+                        .awaitCompletion()
             }
         } catch (_: Exception) {
         }

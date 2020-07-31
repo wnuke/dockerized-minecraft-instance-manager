@@ -1,21 +1,33 @@
-val ktorVersion = "1.3.2"
+val kotlinVersion = "1.4-M3"
+val ktorVersion = "1.3.2-$kotlinVersion"
 val dockerJavaVersion = "3.2.5"
-
-plugins {
-    kotlin("jvm") version "1.3.70"
-    kotlin("plugin.serialization") version "1.3.70"
-    application
-}
 
 repositories {
     jcenter()
     mavenCentral()
     gradlePluginPortal()
+    maven("https://dl.bintray.com/kotlin/kotlin-eap")
+    maven("https://dl.bintray.com/kotlin/kotlin-dev")
     maven("https://kotlin.bintray.com/kotlinx")
+}
+
+plugins {
+    kotlin("jvm") version "1.4-M3"
+    id("org.jetbrains.dokka") version "1.4-mc-1"
+    kotlin("plugin.serialization") version "1.4-M3"
+    application
 }
 
 val run by tasks.getting(JavaExec::class) {
     standardInput = System.`in`
+}
+
+tasks.register<org.jetbrains.dokka.gradle.DokkaTask>("javadoc") {
+    dependencies {
+        // Using the javadoc plugin as "custom format". Can use any plugin here!
+        plugins("org.jetbrains.dokka:javadoc-plugin:1.4-mc-1")
+    }
+    outputDirectory = "$buildDir/javadoc"
 }
 
 dependencies {
