@@ -22,7 +22,7 @@ val run by tasks.getting(JavaExec::class) {
     standardInput = System.`in`
 }
 
-tasks.register<org.jetbrains.dokka.gradle.DokkaTask>("dokkaJavadoc") {
+tasks.register<org.jetbrains.dokka.gradle.DokkaTask>("dokkaJavadocCustom") {
     dependencies {
         // Using the javadoc plugin as "custom format". Can use any plugin here!
         plugins("org.jetbrains.dokka:javadoc-plugin:1.4-mc-1")
