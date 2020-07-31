@@ -14,6 +14,9 @@ pipeline {
         }
         stage('javadoc') {
             steps {
+                withGradle {
+                     sh './gradlew javadoc'
+                }
                 step([$class: 'JavadocArchiver', javadocDir: 'build/javadoc', keepAll: true])
             }
         }
