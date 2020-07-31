@@ -12,6 +12,9 @@ pipeline {
                 }
             }
         }
+        stage('javadoc') {
+            step([$class: 'JavadocArchiver', javadocDir: 'build/javadoc', keepAll: true])
+        }
     }
     post {
         always {
