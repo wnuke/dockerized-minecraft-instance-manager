@@ -1,6 +1,15 @@
-val kotlinVersion = "1.4-M3"
-val ktorVersion = "1.3.2-$kotlinVersion"
-val dockerJavaVersion = "3.2.5"
+/**
+ * Version of Kotlin to use.
+ */
+val kotlinVersion: String = "1.4.0-rc"
+/**
+ * Version of Ktor to use
+ */
+val ktorVersion: String = "1.3.2-$kotlinVersion"
+/**
+ * Version of the Java Docker API to use
+ */
+val dockerJavaVersion: String = "3.2.5"
 
 repositories {
     jcenter()
@@ -12,30 +21,34 @@ repositories {
 }
 
 plugins {
-    kotlin("jvm") version "1.4-M3"
-    id("org.jetbrains.dokka") version "1.4-mc-1"
-    kotlin("plugin.serialization") version "1.4-M3"
+    java
     application
+    kotlin("jvm") version "1.4.0-rc"
+    kotlin("plugin.serialization") version "1.4.0-rc"
+    id("org.jetbrains.dokka") version "1.4.0-rc-21"
 }
 
-val run by tasks.getting(JavaExec::class) {
+/**
+ * Make the run task use System.in as standard input.
+ */
+val run: JavaExec by tasks.getting(JavaExec::class) {
     standardInput = System.`in`
 }
 
 tasks.register<org.jetbrains.dokka.gradle.DokkaTask>("dokkaJavadocCustom") {
     dependencies {
         // Using the javadoc plugin as "custom format". Can use any plugin here!
-        plugins("org.jetbrains.dokka:javadoc-plugin:1.4-mc-1")
+        plugins("org.jetbrains.dokka:javadoc-plugin:1.4.0-rc-21")
     }
     outputDirectory = "$buildDir/javadoc"
 }
 
 dependencies {
     // Align versions of all Kotlin components
-    implementation(platform("org.jetbrains.kotlin:kotlin-bom"))
+    implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))
 
     // Use the Kotlin JDK 8 standard library.
-    implementation("org.jetbrains.kotlin:kotlin-stdlib-jdk8")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlinVersion")
 
     // Kotlinx Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
@@ -56,10 +69,10 @@ dependencies {
     implementation("io.ktor:ktor-client-serialization-jvm:$ktorVersion")
 
     // Use the Kotlin test library.
-    testImplementation("org.jetbrains.kotlin:kotlin-test")
+    testImplementation("org.jetbrains.kotlin:kotlin-test:$kotlinVersion")
 
     // Use the Kotlin JUnit integration.
-    testImplementation("org.jetbrains.kotlin:kotlin-test-junit")
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlinVersion")
 }
 
 application {
