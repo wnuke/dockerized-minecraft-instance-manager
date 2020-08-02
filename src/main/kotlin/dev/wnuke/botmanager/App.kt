@@ -8,6 +8,7 @@ import dev.wnuke.botmanager.minecraft.MinecraftAPI
  * Instance of the Docker API Client
  */
 lateinit var dockerAPI: DockerAPI
+
 /**
  * Instance of the Minecraft Bot API Client
  */

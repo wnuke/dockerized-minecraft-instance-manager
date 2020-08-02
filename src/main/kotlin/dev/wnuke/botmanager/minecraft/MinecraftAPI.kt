@@ -1,12 +1,10 @@
 package dev.wnuke.botmanager.minecraft
 
-import io.ktor.client.HttpClient
-import io.ktor.client.engine.apache.Apache
-import io.ktor.client.features.json.JsonFeature
-import io.ktor.client.features.json.serializer.KotlinxSerializer
-import io.ktor.client.request.get
-import io.ktor.client.request.post
-import io.ktor.client.request.url
+import io.ktor.client.*
+import io.ktor.client.engine.apache.*
+import io.ktor.client.features.json.*
+import io.ktor.client.features.json.serializer.*
+import io.ktor.client.request.*
 import io.ktor.http.contentType
 
 /**

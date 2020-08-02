@@ -1,7 +1,6 @@
 package dev.wnuke.botmanager.command.commands
 
 import dev.wnuke.botmanager.command.Command
-import dev.wnuke.botmanager.dockerAPI
 import kotlin.system.exitProcess
 
 /**
