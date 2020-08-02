@@ -9,6 +9,9 @@ import dev.wnuke.botmanager.minecraftAPI
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
+/**
+ * Command to tell an instance to connect to a server
+ */
 class Connect : Command() {
     override val arguments: Array<Argument<out Any>> = arrayOf(IntegerArgument("instance", "Port of the instance to connect.", true),
             StringArgument("address", "Address of the server to connect the instance to.", true),

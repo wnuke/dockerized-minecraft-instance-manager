@@ -5,6 +5,9 @@ import dev.wnuke.botmanager.command.arguments.Argument
 import dev.wnuke.botmanager.command.arguments.StringArgument
 import dev.wnuke.botmanager.dockerAPI
 
+/**
+ * Command to build the bot Docker image
+ */
 class Build : Command() {
     override val arguments: Array<Argument<out Any>> = arrayOf(StringArgument("build path", "Path to the folder containg the Dockerfile.", false))
     override val aliases: Array<String> = arrayOf("build", "b")

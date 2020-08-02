@@ -7,9 +7,16 @@ import java.util.regex.Matcher
 import java.util.regex.Pattern
 
 
+/**
+ * Manages commands and handles their execution
+ */
 class CommandManager {
     private val commands = hashSetOf(Build(), Connect(), Create(), Destroy(), DestroyAll(), Exit(), List(), Prune())
 
+    /**
+     * Finds and executes a command by name and splits the arguments string into substrings to be used as arguments
+     * @param commandWithArgs  String to split into a command and its arguments
+     */
     fun execute(commandWithArgs: String) {
         if (commandWithArgs.isEmpty() || commandWithArgs.isBlank()) return
         val commandSplit = commandWithArgs.split(' ', ignoreCase = true, limit = 2)
