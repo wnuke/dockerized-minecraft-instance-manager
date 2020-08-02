@@ -12,9 +12,14 @@ import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
 import dev.wnuke.botmanager.dockerAPI
 import java.io.File
+import java.io.IOException
+import java.net.ServerSocket
 import kotlin.system.exitProcess
 
 
+/**
+ * Client to interact with the Docker API to manage instances of the Minecraft bot
+ */
 class DockerAPI {
     private val dockerClientConfig: DockerClientConfig
 
@@ -39,6 +44,11 @@ class DockerAPI {
         }
     }
 
+    /**
+     * Gets the Docker container object of an instance by it's port
+     * @param instancePort  Port of the instance to get
+     * @return The Docker container object for that instance
+     */
     fun getInstanceByPort(instancePort: Int): Container? {
         for (instance in getBotInstances()) {
             if ((instance.ports.getOrNull(0) ?: continue).publicPort == instancePort) return instance
@@ -46,13 +56,24 @@ class DockerAPI {
         return null
     }
 
-    fun instanceExists(instancePort: Int): Boolean {
-        for (instance in getBotInstances()) {
-            if ((instance.ports.getOrNull(0) ?: continue).publicPort == instancePort) return true
+    /**
+     * Checks if a port is available
+     * @param port  Port to check
+     * @return Whether or not the port is available
+     */
+    fun portInUse(port: Int): Boolean {
+        return try {
+            ServerSocket(port).close()
+            false
+        } catch (_: IOException) {
+            true
         }
-        return false
     }
 
+    /**
+     * Builds a Docker image using the Dockerfile in a directory, also uses the directory as build context
+     * @param path  Folder to use as build context, should also contain Dockerfile
+     */
     fun buildBotImage(path: String) {
         try {
             val botBuildFolder = File(path)
@@ -66,6 +87,10 @@ class DockerAPI {
         }
     }
 
+    /**
+     * Gets all Docker Containers that are instances of the bot
+     * @return HashSet of Containers
+     */
     fun getBotInstances(): HashSet<Container> {
         try {
             val allContainers = dockerClient.listContainersCmd().withShowAll(true).exec()
@@ -81,17 +106,21 @@ class DockerAPI {
         return HashSet()
     }
 
-    fun destroyAllBotInstances(): Boolean {
-        return try {
+    /**
+     * Destroys all Docker Containers that are instances of the bot
+     */
+    fun destroyAllBotInstances() {
+        try {
             for (instance in getBotInstances()) {
                 dockerClient.removeContainerCmd(instance.id).withForce(true).exec()
             }
-            true
         } catch (_: Exception) {
-            false
         }
     }
 
+    /**
+     * Destroys all stopped Docker containers that are instances of the bot
+     */
     fun pruneBotInstances(): Boolean {
         return try {
             for (instance in getBotInstances()) {
@@ -105,9 +134,14 @@ class DockerAPI {
         }
     }
 
+    /**
+     * Destroys the Docker container that contains an instance
+     * @param port  Port of the instance to destroy
+     * @return Whether or not an instance was found and destroyed
+     */
     fun destroyBotInstance(port: Int): Boolean {
         try {
-            for (container in dockerClient.listContainersCmd().withShowAll(true).exec()) {
+            for (container in getBotInstances()) {
                 for (portMap in container.ports) {
                     if (portMap != null && portMap.publicPort != null) {
                         if (portMap.publicPort == port) {
@@ -122,6 +156,12 @@ class DockerAPI {
         return false
     }
 
+    /**
+     * Creates an instance of the bot
+     * @param username  Username for the bot to launch with, if empty it will be a random string
+     * @param password  Password to login with, if empty or invalid the bot will use offline mode
+     * @return Whether or not the creation of an instance was successful
+     */
     fun createBotInstance(username: String, password: String): Boolean {
         try {
             val namePrefix = "dockermcbotinst-"
