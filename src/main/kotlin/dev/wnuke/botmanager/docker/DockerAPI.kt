@@ -10,7 +10,6 @@ import com.github.dockerjava.core.DockerClientConfig
 import com.github.dockerjava.core.DockerClientImpl
 import com.github.dockerjava.httpclient5.ApacheDockerHttpClient
 import com.github.dockerjava.transport.DockerHttpClient
-import dev.wnuke.botmanager.dockerAPI
 import java.io.File
 import java.io.IOException
 import java.net.ServerSocket
@@ -57,17 +56,27 @@ class DockerAPI {
     }
 
     /**
-     * Checks if a port is available
+     * Checks whether an instance exists with a port
      * @param port  Port to check
-     * @return Whether or not the port is available
+     * @return Whether or not there is an instance on that port
      */
-    fun portInUse(port: Int): Boolean {
-        return try {
-            ServerSocket(port).close()
-            false
-        } catch (_: IOException) {
-            true
+    fun instanceExists(port: Int): Boolean {
+        if (try {
+                    ServerSocket(port).close()
+                    false
+                } catch (_: IOException) {
+                    true
+                }) {
+            for (container in getBotInstances()) {
+                for (containerPort in container.ports) {
+                    if (containerPort.publicPort == port) {
+                        return true
+                    }
+                }
+            }
+
         }
+        return false
     }
 
     /**
