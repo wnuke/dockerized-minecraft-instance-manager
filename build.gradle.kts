@@ -53,9 +53,6 @@ dependencies {
     // Kotlinx Serialization
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-runtime:0.20.0")
 
-    // Cli
-    implementation("org.jetbrains.kotlinx:kotlinx-cli:0.2.1")
-
     // Docker
     implementation("com.github.docker-java:docker-java-core:$dockerJavaVersion")
     implementation("com.github.docker-java:docker-java-transport-httpclient5:$dockerJavaVersion")
