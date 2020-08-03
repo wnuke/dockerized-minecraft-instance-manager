@@ -35,14 +35,6 @@ val run: JavaExec by tasks.getting(JavaExec::class) {
     standardInput = System.`in`
 }
 
-tasks.register<org.jetbrains.dokka.gradle.DokkaTask>("dokkaJavadocCustom") {
-    dependencies {
-        // Using the javadoc plugin as "custom format". Can use any plugin here!
-        plugins("org.jetbrains.dokka:javadoc-plugin:1.4.0-rc-21")
-    }
-    outputDirectory = "$buildDir/javadoc"
-}
-
 dependencies {
     // Align versions of all Kotlin components
     implementation(platform("org.jetbrains.kotlin:kotlin-bom:$kotlinVersion"))

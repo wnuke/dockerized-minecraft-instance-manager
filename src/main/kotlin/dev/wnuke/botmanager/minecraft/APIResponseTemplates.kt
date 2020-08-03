@@ -32,6 +32,7 @@ data class Player(
 
 /**
  * Data class to complement the Player class
+ *
  * @see Player
  */
 data class PlayerInfo(
@@ -50,6 +51,7 @@ data class PlayerInfo(
 
 /**
  * Data class to complement the Player class, contains the in world position of the player
+ *
  * @see Player
  */
 data class Position(

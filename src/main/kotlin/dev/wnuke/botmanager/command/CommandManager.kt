@@ -13,6 +13,7 @@ class CommandManager {
 
     /**
      * Finds and executes a command by name and splits the arguments string into substrings to be used as arguments
+     *
      * @param commandWithArgs  String to split into a command and its arguments
      */
     fun execute(commandWithArgs: String) {

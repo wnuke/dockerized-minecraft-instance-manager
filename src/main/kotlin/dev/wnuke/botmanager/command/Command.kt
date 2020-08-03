@@ -1,6 +1,7 @@
 package dev.wnuke.botmanager.command
 
 import dev.wnuke.botmanager.command.arguments.Argument
+import java.text.ParseException
 
 /**
  * Abstract class for creating commands for the cli.
@@ -33,8 +34,8 @@ abstract class Command {
                     break
                 } else {
                     try {
-                        arg.parse(args[i])
-                    } catch (e: NullPointerException) {
+                        arg.parse(args[i], i)
+                    } catch (e: ParseException) {
                         println(e.localizedMessage)
                         return
                     }

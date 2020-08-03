@@ -1,5 +1,7 @@
 package dev.wnuke.botmanager.command.arguments
 
+import java.text.ParseException
+
 /**
  * Abstract argument for creating more arguments
  * @property T  Primitive type of the argument
@@ -25,7 +27,8 @@ abstract class Argument<T>(
     /**
      * Sets the value of the argument based on a String
      * Should throw a NullPointerException when parsing fails
+     * @throws ParseException  when the input String cannot be parsed
      */
-    @Throws(NullPointerException::class)
-    abstract fun parse(input: String)
+    @Throws(ParseException::class)
+    abstract fun parse(input: String, index: Int)
 }

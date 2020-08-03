@@ -45,6 +45,7 @@ class DockerAPI {
 
     /**
      * Gets the Docker container object of an instance by it's port
+     *
      * @param instancePort  Port of the instance to get
      * @return The Docker container object for that instance
      */
@@ -57,6 +58,7 @@ class DockerAPI {
 
     /**
      * Checks whether an instance exists with a port
+     *
      * @param port  Port to check
      * @return Whether or not there is an instance on that port
      */
@@ -81,6 +83,7 @@ class DockerAPI {
 
     /**
      * Builds a Docker image using the Dockerfile in a directory, also uses the directory as build context
+     *
      * @param path  Folder to use as build context, should also contain Dockerfile
      */
     fun buildBotImage(path: String) {
@@ -98,6 +101,7 @@ class DockerAPI {
 
     /**
      * Gets all Docker Containers that are instances of the bot
+     *
      * @return HashSet of Containers
      */
     fun getBotInstances(): HashSet<Container> {
@@ -130,21 +134,20 @@ class DockerAPI {
     /**
      * Destroys all stopped Docker containers that are instances of the bot
      */
-    fun pruneBotInstances(): Boolean {
+    fun pruneBotInstances() {
         return try {
             for (instance in getBotInstances()) {
                 if (instance.state != "running") {
                     dockerClient.removeContainerCmd(instance.id).withForce(true).exec()
                 }
             }
-            true
         } catch (_: Exception) {
-            false
         }
     }
 
     /**
      * Destroys the Docker container that contains an instance
+     *
      * @param port  Port of the instance to destroy
      * @return Whether or not an instance was found and destroyed
      */
@@ -167,6 +170,7 @@ class DockerAPI {
 
     /**
      * Creates an instance of the bot
+     *
      * @param username  Username for the bot to launch with, if empty it will be a random string
      * @param password  Password to login with, if empty or invalid the bot will use offline mode
      * @return Whether or not the creation of an instance was successful
