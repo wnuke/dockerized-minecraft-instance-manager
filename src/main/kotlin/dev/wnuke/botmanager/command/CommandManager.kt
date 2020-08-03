@@ -22,7 +22,7 @@ class CommandManager {
         val commandAlias = if (commandSplit.isNotEmpty()) commandSplit[0] else commandWithArgs
         for (command in commands) {
             if (commandAlias in command.aliases) {
-                command.exec(splitStringByQuotes(commandSplit[1]))
+                command.exec(splitStringByQuotes(if (commandSplit.size > 1) commandSplit[1] else ""))
                 return
             }
         }
