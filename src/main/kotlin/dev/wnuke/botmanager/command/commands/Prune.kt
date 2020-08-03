@@ -10,10 +10,7 @@ class Prune : Command() {
     override val aliases: Array<String> = arrayOf("prune")
 
     override fun run() {
-        if (dockerAPI.pruneBotInstances()) {
-            println("Destroyed all stopped instances.")
-        } else {
-            println("An error occurred while destroying stopped instances.")
-        }
+        dockerAPI.pruneBotInstances()
+        println("Destroyed all stopped instances.")
     }
 }

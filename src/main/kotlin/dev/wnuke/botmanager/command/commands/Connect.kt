@@ -20,7 +20,7 @@ class Connect : Command() {
 
     override fun run() {
         if (arguments[2].value == 0) {
-            arguments[2].parse("25565")
+            arguments[2].parse("25565", 2)
         }
         val port = arguments[0].value as Int
         if (dockerAPI.instanceExists(port)) {
