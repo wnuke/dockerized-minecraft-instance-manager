@@ -18,6 +18,11 @@ lateinit var dockerAPI: DockerAPI
 lateinit var minecraftAPI: MinecraftAPI
 
 /**
+ * Port of the currently selected instance
+ */
+var currentInstance = 0
+
+/**
  * Main method to start the app
  */
 fun main() {
@@ -52,3 +57,11 @@ fun splitStringByQuotes(string: String): Array<String> {
     return splitString.toTypedArray()
 }
 
+/**
+ * Gets message saying instance does not exist
+ * @param instance  Instance to reference
+ * @return Message
+ */
+fun noInstance(instance: String): String {
+	return "No instance $instance."
+}

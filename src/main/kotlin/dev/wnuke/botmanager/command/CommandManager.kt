@@ -9,7 +9,7 @@ import dev.wnuke.botmanager.splitStringByQuotes
  * Manages commands and handles their execution
  */
 class CommandManager {
-    private val commands = hashSetOf(Build(), Connect(), Create(), Destroy(), DestroyAll(), Exit(), List(), Prune())
+    private val commands = hashSetOf(Build(), Connect(), Create(), Destroy(), DestroyAll(), Exit(), List(), Login(), Message(), Prune(), Select())
 
     /**
      * Finds and executes a command by name and splits the arguments string into substrings to be used as arguments

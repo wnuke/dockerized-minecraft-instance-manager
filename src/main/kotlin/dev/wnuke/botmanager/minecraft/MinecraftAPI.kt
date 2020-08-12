@@ -63,7 +63,7 @@ class MinecraftAPI {
         client.post<Unit> {
             url("$apiAddressPrefix$instancePort/login")
             contentType(io.ktor.http.ContentType.Application.Json)
-            body = json.write(Login(username, password))
+            body = Login(username, password)
         }
     }
 
@@ -89,7 +89,7 @@ class MinecraftAPI {
         client.post<Unit> {
             url("$apiAddressPrefix$instancePort/sendmsg")
             contentType(io.ktor.http.ContentType.Application.Json)
-            body = json.write(Message(message))
+            body = Message(message)
         }
     }
 }
