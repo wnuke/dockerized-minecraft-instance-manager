@@ -2,10 +2,12 @@
  * Version of Kotlin to use.
  */
 val kotlinVersion: String = "1.4.0-rc"
+
 /**
  * Version of Ktor to use
  */
 val ktorVersion: String = "1.3.2-$kotlinVersion"
+
 /**
  * Version of the Java Docker API to use
  */

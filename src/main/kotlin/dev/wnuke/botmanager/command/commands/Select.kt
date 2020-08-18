@@ -16,11 +16,18 @@ class Select : Command() {
 
     override fun run() {
         val port = arguments[0].value as Int
-        if (dockerAPI.instanceExists(port)) {
-            currentInstance = port
-            println("Instance $port is now selected")
-        } else {
-            println(noInstance(port.toString()))
+        when {
+            dockerAPI.instanceExists(port) -> {
+                currentInstance = port
+                println("Instance $port is now selected")
+            }
+            dockerAPI.instanceExists(port + 10000) -> {
+                currentInstance = port + 10000
+                println("Instance $currentInstance is now selected")
+            }
+            else -> {
+                println(noInstance(port.toString()))
+            }
         }
     }
 }

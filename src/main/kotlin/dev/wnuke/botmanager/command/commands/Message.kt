@@ -21,9 +21,10 @@ class Message : Command() {
     override fun run() {
         if (dockerAPI.instanceExists(currentInstance)) {
             GlobalScope.launch {
+                println("Sending message from $currentInstance...")
                 try {
-                    println("Sending message from $currentInstance...")
                     minecraftAPI.sendMessage(currentInstance, arguments[0].value as String)
+                    println("Message sent.")
                 } catch (e: ServerResponseException) {
                     println("Failed to send message.")
                 }
