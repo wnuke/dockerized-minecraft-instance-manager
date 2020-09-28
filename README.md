@@ -1,3 +1,5 @@
+[![Discord](https://img.shields.io/discord/745728805678874800?logo=discord)](https://discord.gg/MwBvhEz)
+[![build](https://github.com/wnuke-dev/dockerized-minecraft-instance-manager/workflows/Java%20CI%20with%20Gradle/badge.svg)]((https://github.com/wnuke-dev/dockerized-minecraft-instance-manager/actions?query=workflow%3A%22Java%20CI%20with%20Gradle%22))
 # Docker MC Instance Manager
 
 A Kotlin application to manage instances of Docker MC
